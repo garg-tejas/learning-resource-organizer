@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/learning-resource-organizer/static/css/main.e59f1a4a.css",
-    "main.js": "/learning-resource-organizer/static/js/main.8e80f972.js",
+    "main.js": "/learning-resource-organizer/static/js/main.aafdb1b0.js",
     "index.html": "/learning-resource-organizer/index.html",
     "main.e59f1a4a.css.map": "/learning-resource-organizer/static/css/main.e59f1a4a.css.map",
-    "main.8e80f972.js.map": "/learning-resource-organizer/static/js/main.8e80f972.js.map"
+    "main.aafdb1b0.js.map": "/learning-resource-organizer/static/js/main.aafdb1b0.js.map"
   },
   "entrypoints": [
     "static/css/main.e59f1a4a.css",
-    "static/js/main.8e80f972.js"
+    "static/js/main.aafdb1b0.js"
   ]
 }
