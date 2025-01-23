@@ -8,9 +8,6 @@ const Rack = ({ field }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const filteredResources = getFilteredResources(field);
 
-    // Add debug logging
-    console.log(`Rack ${field} resources:`, filteredResources);
-
     if (filteredResources.length === 0) return null;
 
     return (
