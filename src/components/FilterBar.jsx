@@ -51,7 +51,7 @@ const FilterBar = () => {
                     </div>
 
                     {/* Filter Section */}
-                    <div className="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0">
+                    <div className="flex items-center space-x-2 md:overflow-x-auto pb-2 md:pb-0">
                         <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
                             <Filter className="h-4 w-4" />
                             <span>Filters:</span>
@@ -62,7 +62,7 @@ const FilterBar = () => {
                                     key={tag}
                                     onClick={() => handleTagToggle(tag)}
                                     className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${selectedTags.includes(tag)
-                                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 ring-2 ring-blue-300'
                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
                                         }`}
                                 >
@@ -76,7 +76,7 @@ const FilterBar = () => {
                         {(selectedTags.length > 0 || searchTerm) && (
                             <button
                                 onClick={clearFilters}
-                                className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
+                                className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 whitespace-nowrap"
                             >
                                 Clear all
                             </button>

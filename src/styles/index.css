@@ -58,3 +58,39 @@
 .toast-container {
     z-index: 9999;
 }
+
+/* Drag and drop styles */
+[aria-roledescription="sortable"] {
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.dark [aria-roledescription="sortable"] {
+    background: #374151;
+}
+
+/* Smooth transitions for filter tags */
+.filter-tag {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Improved scrollbar for tag management */
+.tag-management-list::-webkit-scrollbar-thumb {
+    background-color: #4B5563;
+    border-radius: 10px;
+}
+
+.tag-management-list::-webkit-scrollbar-track {
+    background: #1F2937;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+    .filter-section {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .clear-filters {
+        margin-left: auto;
+    }
+}

@@ -1,12 +1,81 @@
 import React, { useState } from 'react';
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+    useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { X, Plus, Tag, AlertTriangle, GripVertical } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { X, Plus, Tag, AlertTriangle } from 'lucide-react';
 import { toast } from 'react-toastify';
 
+const SortableTag = ({ tag, handleDeleteTag }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: tag });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        touchAction: 'none',
+    };
+
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            className="flex items-center justify-between p-2 mb-2 bg-gray-100 dark:bg-gray-700 rounded-md group"
+        >
+            <div className="flex items-center gap-2 flex-1">
+                <button
+                    className="touch-none p-1 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    {...attributes}
+                    {...listeners}
+                >
+                    <GripVertical size={16} />
+                </button>
+                <span className="truncate">{tag}</span>
+            </div>
+            <button
+                onClick={() => handleDeleteTag(tag)}
+                className="text-red-500 hover:text-red-700 dark:hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                title="Delete tag"
+            >
+                <X className="h-4 w-4" />
+            </button>
+        </div>
+    );
+};
+
 const TagManagement = ({ onClose }) => {
-    const { tags, addTag, deleteTag } = useAppContext();
+    const { tags, addTag, deleteTag, setTags } = useAppContext();
     const [newTag, setNewTag] = useState('');
     const [error, setError] = useState('');
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+        if (active.id !== over.id) {
+            setTags((items) => {
+                const oldIndex = items.indexOf(active.id);
+                const newIndex = items.indexOf(over.id);
+                const newItems = [...items];
+                newItems.splice(newIndex, 0, newItems.splice(oldIndex, 1)[0]);
+                return newItems;
+            });
+        }
+    };
 
     const handleAddTag = async (e) => {
         e.preventDefault();
@@ -17,8 +86,8 @@ const TagManagement = ({ onClose }) => {
             return;
         }
 
-        if (trimmedTag.length < 2) {
-            setError('Tag name must be at least 2 characters long');
+        if (tags.includes(trimmedTag)) {
+            setError('Tag already exists');
             return;
         }
 
@@ -92,27 +161,25 @@ const TagManagement = ({ onClose }) => {
                         </h3>
                         <div className="max-h-60 overflow-y-auto">
                             {tags.length === 0 ? (
-                                <p className="text-gray-500 text-center py-4">
-                                    No tags created yet
-                                </p>
+                                <p className="text-gray-500 text-center py-4">No tags created yet</p>
                             ) : (
-                                <div className="grid grid-cols-2 gap-2">
-                                    {tags.map((tag) => (
-                                        <div
-                                            key={tag}
-                                            className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded-md"
-                                        >
-                                            <span className="truncate">{tag}</span>
-                                            <button
-                                                onClick={() => handleDeleteTag(tag)}
-                                                className="text-red-500 hover:text-red-700 dark:hover:text-red-400"
-                                                title="Delete tag"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </button>
+                                <DndContext
+                                    sensors={sensors}
+                                    collisionDetection={closestCenter}
+                                    onDragEnd={handleDragEnd}
+                                >
+                                    <SortableContext items={tags} strategy={verticalListSortingStrategy}>
+                                        <div className="space-y-2">
+                                            {tags.map((tag) => (
+                                                <SortableTag
+                                                    key={tag}
+                                                    tag={tag}
+                                                    handleDeleteTag={handleDeleteTag}
+                                                />
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
+                                    </SortableContext>
+                                </DndContext>
                             )}
                         </div>
                     </div>
